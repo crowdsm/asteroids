@@ -5,6 +5,8 @@ import pygame
 from constants import *
 from circleshape import *
 from player import *
+from asteroid import *
+from asteroidfield import *
 
 def main():
     #
@@ -20,11 +22,15 @@ def main():
     
     updatable = pygame.sprite.Group() 
     drawable = pygame.sprite.Group() 
+    astroids = pygame.sprite.Group() 
     
     Player.containers = (updatable, drawable)
+    Asteroid.containers = (updatable, drawable, astroids)
+    AsteroidField.containers = (updatable)
 
     # Needs to be created after the groups/containers defined (static changes) 
     player = Player(x,y)
+    astroid_field = AsteroidField()
 
     print(f"updateable: {updatable.sprites()}")
     print(f"drawable: {drawable.sprites()}")
@@ -36,6 +42,9 @@ def main():
                 return
         
         updatable.update(dt)
+        for astroid in astroids:
+            if astroid.collisions_check(player):
+                return print("Game over!")
         
         screen.fill("black") 
         for thing in drawable:
