@@ -29,14 +29,11 @@ def main():
     Player.containers = (updatable, drawable)
     Asteroid.containers = (updatable, drawable, astroids)
     AsteroidField.containers = (updatable)
-    Shot.containers = (updatable, drawable)
+    Shot.containers = (updatable, drawable, shots)
 
     # Needs to be created after the groups/containers defined (static changes) 
     player = Player(x,y)
     astroid_field = AsteroidField()
-
-    print(f"updateable: {updatable.sprites()}")
-    print(f"drawable: {drawable.sprites()}")
 
     # game loop 
     while True:
@@ -49,18 +46,16 @@ def main():
             if astroid.collisions_check(player):
                 return print("Game over!")
         
+            for bullet in shots:
+                if astroid.collisions_check(bullet):
+                    astroid.kill()
+                    bullet.kill()
+        
         screen.fill("black") 
         for thing in drawable:
             thing.draw(screen)
         pygame.display.flip()
-        dt = game_clock.tick(60)/1000
-
-    
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
-
-    
-
+        dt = game_clock.tick(60)/1000  
 
 
 if __name__ == "__main__":
